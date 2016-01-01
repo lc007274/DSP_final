@@ -6,8 +6,8 @@ import scipy
 # Parameter Definition
 RATE  = 20000
 DELAY = 900
-SOUND_SPEED  = 341   # Theoretical sound speed (m/s)
-OBJECT_SPEED = -30    # Object moving speed (m/s)
+SOUND_SPEED  = 341  # Theoretical sound speed (m/s)
+OBJECT_SPEED = -30  # Object moving speed (m/s)
 
 # freq_coeff is the coefficient of the frequency, depends on object speed
 freq_coeff = SOUND_SPEED/(SOUND_SPEED+OBJECT_SPEED)
@@ -80,10 +80,17 @@ def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:
         fft_left = np.concatenate((fft_left[-FREQ:1024], [0]*(-FREQ)))
         fft_right = np.concatenate((fft_right[-FREQ:1024], [0]*(-FREQ)))
 
+    # Doopler Effect
     for i in range(1024):
+
+        # Get the index of original spectrum
         index = np.ceil(i/freq_coeff)
+
+        # Get the ratio of two adjacent component of original spectrum
         low_coeff = index-i/freq_coeff
         high_coeff = 1 - low_coeff
+
+        # Assign to scaled spectrum from linear combination of original spectrum
         if index>1024:
             out_fft_left[i]=0
             out_fft_right[i]=0
