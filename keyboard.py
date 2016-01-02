@@ -4,25 +4,25 @@ main = Tk()
 speed = 0
 
 def leftKey(event):
-    global speed
+#    global speed
     print "Left key pressed"
     speed-=1
     print speed
 
 def rightKey(event):
-    global speed
+#    global speed
     print "Right key pressed"
     speed+=1
     print speed
     
 def upKey(event):
-    global speed
+#    global speed
     print "Up key pressed"
     speed+=1
     print speed
 
 def downKey(event):
-    global speed
+#    global speed
     print "Down key pressed"
     speed-=1
     print speed
