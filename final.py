@@ -27,7 +27,6 @@ def main():
 
     stream.start_stream() 
     sp.mainloop()
-    stream.start_stream()   
 
     print("\n\nfreq_coeff = ", "%.2f" % freq_coeff)
     print(" obj speed = ", OBJECT_SPEED)
