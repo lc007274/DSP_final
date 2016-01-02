@@ -4,7 +4,6 @@ import numpy as np
 import scipy
 from Tkinter import *
 
-#123123
 # Parameter Definition
 RATE  = 4800
 DELAY = 900
@@ -40,27 +39,27 @@ def main():
 # Keyboard detection
 def leftKey(event):
     global OBJECT_SPEED
-    print "Left key pressed"
+    print("Left key pressed")
     OBJECT_SPEED-=1
-    print OBJECT_SPEED
+    print(OBJECT_SPEED)
 
 def rightKey(event):
     global OBJECT_SPEED
-    print "Right key pressed"
+    print("Right key pressed")
     OBJECT_SPEED+=1
-    print OBJECT_SPEED
+    print(OBJECT_SPEED)
     
 def upKey(event):
     global OBJECT_SPEED
-    print "Up key pressed"
+    print("Up key pressed")
     OBJECT_SPEED+=1
-    print OBJECT_SPEED
+    print(OBJECT_SPEED)
 
 def downKey(event):
     global OBJECT_SPEED
-    print "Down key pressed"
+    print("Down key pressed")
     OBJECT_SPEED-=1
-    print OBJECT_SPEED
+    print(OBJECT_SPEED)
 
 #Tkinker frame
 sp = Tk()
