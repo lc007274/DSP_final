@@ -2,19 +2,22 @@ import pyaudio
 import time
 import numpy as np
 import scipy
+from Tkinter import *
+
 #123123
 # Parameter Definition
 RATE  = 4800
 DELAY = 900
-SOUND_SPEED  = 341  # Theoretical sound speed (m/s)
-OBJECT_SPEED = 25  # Object moving speed (m/s)
+SOUND_SPEED  = 341.00  # Theoretical sound speed (m/s)
+OBJECT_SPEED = -100  # Object moving speed (m/s)
 
-# freq_coeff is the coefficient of the frequency, depends on object speed
+#freq_coeff is the coefficient of the frequency, depends on object speed
 freq_coeff = SOUND_SPEED/(SOUND_SPEED+OBJECT_SPEED)
 
 # Main function
 def main():
     p = pyaudio.PyAudio()
+   
     stream = p.open(format=pyaudio.paInt16,
                     channels=2,
                     rate=RATE,
@@ -22,15 +25,49 @@ def main():
                     output=True,
                     stream_callback=callback)
 
+    stream.start_stream() 
+    sp.mainloop()
     stream.start_stream()   
+
     print("\n\nfreq_coeff = ", "%.2f" % freq_coeff)
     print(" obj speed = ", OBJECT_SPEED)
+    
     while stream.is_active():
         time.sleep(0.2)
 
     p.terminate()
     return
 
+# Keyboard detection
+def leftKey(event):
+    global OBJECT_SPEED
+    print "Left key pressed"
+    OBJECT_SPEED-=1
+    print OBJECT_SPEED
+
+def rightKey(event):
+    global OBJECT_SPEED
+    print "Right key pressed"
+    OBJECT_SPEED+=1
+    print OBJECT_SPEED
+    
+def upKey(event):
+    global OBJECT_SPEED
+    print "Up key pressed"
+    OBJECT_SPEED+=1
+    print OBJECT_SPEED
+
+def downKey(event):
+    global OBJECT_SPEED
+    print "Down key pressed"
+    OBJECT_SPEED-=1
+    print OBJECT_SPEED
+
+#Tkinker frame
+sp = Tk()
+frame = Frame(sp, width=100, height=100)
+frame.focus_set()
+frame.pack()
 
 # hl is a unit impulse function
 hl = []
@@ -45,8 +82,9 @@ hr.extend([1])
 zero_array=[]
 zero_array.extend([0]*len(hl))
 
-def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:],c=zero_array[:]):
-
+def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:],c=zero_array[:], ):
+    
+    global OBJECT_SPEED, SOUND_SPEED, freq_coeff, sp
     # Transform byte format in_data to float format out_data
     data_length = int(len(in_data)/4)
     out_data = np.fromstring(in_data,dtype=np.short)
@@ -103,7 +141,7 @@ def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:
             out_fft_right[i] = (low_coeff * fft_right[index-1]) + (high_coeff * fft_right[index])
 #            print( "%.3f" % out_fft_left[i], " = ", "%.1f" % low_coeff, "*", "%.3f" % fft_left[index-1], " / ", "%.1f" % high_coeff, "*", "%.3f" % fft_left[index])
 
-
+    freq_coeff = SOUND_SPEED/(SOUND_SPEED+OBJECT_SPEED)
     # Inverse Fourier Transform
     out_data_left = scipy.ifft(out_fft_left)
     out_data_right = scipy.ifft(out_fft_right)
@@ -124,7 +162,11 @@ def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:
     out_data2 *= 2.0**15
     out = np.int16(out_data2)
     out = out.tostring()
-    
+
+    sp.bind('<Left>', leftKey)
+    sp.bind('<Right>', rightKey)
+    sp.bind('<Up>', upKey)
+    sp.bind('<Down>', downKey)
 
     return (out, pyaudio.paContinue)
 
