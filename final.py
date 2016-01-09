@@ -1,5 +1,5 @@
 import pyaudio
-import time
+from time import sleep
 import numpy as np
 import scipy
 from Tkinter import *
@@ -75,15 +75,15 @@ def downKey2():
     print OBJECT_SPEED
 
 def task():
-    spd.set(OBJECT_SPEED)
-    frame.pack()
-    par.pack(side=LEFT)
-    lin.pack(side=LEFT)
-    frame.focus_set()
-    UP.pack()
-    DOWN.pack()
-    speed.pack()
+    spd.set(OBJECT_SPEED)    
+    ll = "Present Speed = %s"%(spd.get())
+    l.configure(text=ll)    
+
+    sp.update_idletasks() 
+    
     sp.after(10, task)
+
+
         
 #Tkinker frame
 
@@ -93,13 +93,17 @@ frame = Frame(sp)
 spd = IntVar()
 spd.set(OBJECT_SPEED)
 
-lin = Label(frame, text='object speed')
+lin = Label(frame, text='Object Speed')
 UP = Button(sp, text=" UP ", command=upKey2)
 DOWN = Button(sp, text="DOWN", command=downKey2)
-par = Label(frame, textvariable=OBJECT_SPEED)
-speed = Button(sp, text = "Present Speed = %s"%(spd.get()))
+l = Label(sp, text = "Present Speed = %s"%(spd.get()))
 
-
+frame.pack()
+lin.pack(side=LEFT)
+frame.focus_set()
+UP.pack()
+DOWN.pack()
+l.pack()
 
 
 
