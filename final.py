@@ -4,6 +4,7 @@ import numpy as np
 import scipy
 from Tkinter import *
 
+#123123
 # Parameter Definition
 RATE  = 4800
 DELAY = 900
@@ -24,14 +25,14 @@ def main():
                     output=True,
                     stream_callback=callback)
 
-    stream.start_stream() 
-    sp.mainloop()
-
+    
     print("\n\nfreq_coeff = ", "%.2f" % freq_coeff)
     print(" obj speed = ", OBJECT_SPEED)
-    
-    while stream.is_active():
-        time.sleep(0.2)
+
+    stream.start_stream()    
+    if stream.is_active():
+        sp.after(10, task)
+        sp.mainloop()
 
     p.terminate()
     return
@@ -39,33 +40,69 @@ def main():
 # Keyboard detection
 def leftKey(event):
     global OBJECT_SPEED
-    print("Left key pressed")
+    print ("Left key pressed")
     OBJECT_SPEED-=1
-    print(OBJECT_SPEED)
+    print OBJECT_SPEED
 
 def rightKey(event):
     global OBJECT_SPEED
-    print("Right key pressed")
+    print ("Right key pressed")
     OBJECT_SPEED+=1
-    print(OBJECT_SPEED)
+    print OBJECT_SPEED
     
 def upKey(event):
     global OBJECT_SPEED
-    print("Up key pressed")
+    print ("Up key pressed")
     OBJECT_SPEED+=1
-    print(OBJECT_SPEED)
+    print OBJECT_SPEED
 
+def upKey2():
+    global OBJECT_SPEED
+    print ("Up key pressed")
+    OBJECT_SPEED+=1
+    print OBJECT_SPEED
+    
 def downKey(event):
     global OBJECT_SPEED
-    print("Down key pressed")
+    print ("Down key pressed")
     OBJECT_SPEED-=1
-    print(OBJECT_SPEED)
+    print OBJECT_SPEED
+    
+def downKey2():
+    global OBJECT_SPEED
+    print ("Down key pressed")
+    OBJECT_SPEED-=1
+    print OBJECT_SPEED
 
+def task():
+    spd.set(OBJECT_SPEED)
+    frame.pack()
+    par.pack(side=LEFT)
+    lin.pack(side=LEFT)
+    frame.focus_set()
+    UP.pack()
+    DOWN.pack()
+    speed.pack()
+    sp.after(10, task)
+        
 #Tkinker frame
+
 sp = Tk()
-frame = Frame(sp, width=100, height=100)
-frame.focus_set()
-frame.pack()
+frame = Frame(sp)
+
+spd = IntVar()
+spd.set(OBJECT_SPEED)
+
+lin = Label(frame, text='object speed')
+UP = Button(sp, text=" UP ", command=upKey2)
+DOWN = Button(sp, text="DOWN", command=downKey2)
+par = Label(frame, textvariable=OBJECT_SPEED)
+speed = Button(sp, text = "Present Speed = %s"%(spd.get()))
+
+
+
+
+
 
 # hl is a unit impulse function
 hl = []
@@ -165,7 +202,7 @@ def callback(in_data, frame_count, time_info, status, hl=hl,hr=hr,d=zero_array[:
     sp.bind('<Right>', rightKey)
     sp.bind('<Up>', upKey)
     sp.bind('<Down>', downKey)
-
+    
     return (out, pyaudio.paContinue)
 
 main()
